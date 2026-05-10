@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+title: "RALF: Role-Agent Lifecycle Framework"
+message: "If you use RALF in research, documentation, or public work, please cite it using this metadata."
+type: software
+authors:
+  - name: "RALF Framework Contributors"
+abstract: "RALF is an open framework for modeling organizational lifecycles, roles, knowledge, workflows, artifacts, governance gates, and AI-ready task context."
+keywords:
+  - AI governance
+  - organizational modeling
+  - lifecycle modeling
+  - role modeling
+  - agent systems
+  - context packets
+  - domain packs
+  - workflow governance
+license: "NOASSERTION"
+version: "0.1.0-draft"
+date-released: "2026-05-10"
+repository-code: "https://github.com/RALF-framework/ralf"

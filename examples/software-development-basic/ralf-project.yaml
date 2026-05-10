@@ -1,0 +1,181 @@
+ralf_version: "0.1"
+
+project:
+  id: software-development-basic
+  name: Software Development Basic
+  purpose: Model a simple software delivery lifecycle with roles, artifacts, gates, and AI-ready context.
+  status: draft
+
+foundations:
+  - BPMN-style lifecycle modeling
+  - DMN-style gate and decision modeling
+  - W3C PROV-inspired traceability
+  - NIST AI RMF-inspired AI risk management
+
+lifecycle:
+  id: software-delivery
+  name: Software Delivery Lifecycle
+  phases:
+    - id: discovery
+      name: Discovery
+      purpose: Understand the problem and expected outcome.
+      outputs:
+        - problem-brief
+    - id: design
+      name: Design
+      purpose: Define the solution approach, risks, and acceptance criteria.
+      inputs:
+        - problem-brief
+      outputs:
+        - solution-design
+      gates:
+        - design-approval
+    - id: build
+      name: Build
+      purpose: Implement the approved solution.
+      inputs:
+        - solution-design
+      outputs:
+        - implementation
+    - id: review
+      name: Review
+      purpose: Validate quality, safety, and completeness.
+      inputs:
+        - implementation
+      outputs:
+        - review-record
+      gates:
+        - release-readiness
+    - id: release
+      name: Release
+      purpose: Publish the approved change and preserve evidence.
+      inputs:
+        - review-record
+      outputs:
+        - release-notes
+
+roles:
+  - id: product-owner
+    name: Product Owner
+    responsibilities:
+      - define the desired outcome
+      - approve problem scope
+      - approve business acceptance
+  - id: solution-architect
+    name: Solution Architect
+    responsibilities:
+      - design the solution approach
+      - identify technical risks
+      - define acceptance criteria
+  - id: developer
+    name: Developer
+    responsibilities:
+      - implement approved changes
+      - provide implementation evidence
+      - draft release notes
+  - id: reviewer
+    name: Reviewer
+    responsibilities:
+      - inspect quality
+      - verify evidence
+      - approve or reject release readiness
+
+artifacts:
+  - id: problem-brief
+    name: Problem Brief
+    type: document
+    required_fields:
+      - problem
+      - desired_outcome
+      - constraints
+      - success_criteria
+  - id: solution-design
+    name: Solution Design
+    type: document
+    required_fields:
+      - proposed_solution
+      - architecture_notes
+      - risks
+      - acceptance_criteria
+  - id: implementation
+    name: Implementation
+    type: code_or_configuration
+    required_fields:
+      - change_summary
+      - affected_components
+      - test_evidence
+  - id: review-record
+    name: Review Record
+    type: evidence
+    required_fields:
+      - reviewer
+      - findings
+      - decision
+      - timestamp
+  - id: release-notes
+    name: Release Notes
+    type: document
+    required_fields:
+      - summary
+      - changes
+      - risks
+      - rollback_notes
+
+gates:
+  - id: design-approval
+    name: Design Approval
+    phase: design
+    risk_level: medium
+    approver_role: product-owner
+    pass_criteria:
+      - problem is clear
+      - proposed solution is understandable
+      - risks are documented
+      - acceptance criteria are testable
+  - id: release-readiness
+    name: Release Readiness
+    phase: review
+    risk_level: high
+    approver_role: reviewer
+    automated_checks:
+      - tests_passed
+      - review_record_exists
+    pass_criteria:
+      - implementation evidence exists
+      - review decision is approved
+      - release notes are complete
+
+context_packets:
+  - id: cp-draft-release-notes
+    task:
+      id: draft-release-notes
+      objective: Draft release notes from an approved review record.
+    lifecycle:
+      id: software-delivery
+      phase: release
+    role_binding:
+      role: developer
+      authority: draft_only
+    inputs:
+      artifacts:
+        - review-record
+        - implementation
+    tools:
+      allowed:
+        - issue-tracker.read
+        - git.read
+      forbidden:
+        - production.deploy
+        - customer.email.send
+    outputs:
+      required:
+        - release-notes
+    gates:
+      required:
+        - release-readiness
+    trace:
+      required_events:
+        - context_packet_created
+        - input_artifact_read
+        - output_artifact_created
+        - gate_submitted
