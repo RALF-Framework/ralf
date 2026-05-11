@@ -4,6 +4,8 @@ This document defines the core vocabulary of RALF.
 
 RALF should use simple language at the user-facing level while preserving a rigorous model underneath.
 
+---
+
 ## 1. Domain
 
 A **domain** is an area of knowledge, work, responsibility, or operations.
@@ -32,6 +34,8 @@ domain:
     - release
 ```
 
+---
+
 ## 2. Lifecycle
 
 A **lifecycle** describes how work moves from beginning to end.
@@ -43,6 +47,7 @@ A lifecycle should include:
 - inputs
 - outputs
 - responsible roles
+- governance controls
 - gates
 - artifacts
 - risks
@@ -63,6 +68,8 @@ RALF principle:
 
 > Start with the lifecycle before designing agents, prompts, or automation.
 
+---
+
 ## 3. Role
 
 A **role** describes responsibility, authority, accountability, and participation.
@@ -81,6 +88,8 @@ role:
     - approve review gate
 ```
 
+---
+
 ## 4. Agent
 
 An **agent** is an executor that performs bounded work.
@@ -95,6 +104,8 @@ An agent can be:
 RALF principle:
 
 > Agents execute tasks, but humans and organizations remain accountable for outcomes.
+
+---
 
 ## 5. Skill
 
@@ -122,6 +133,8 @@ skill:
     - release-notes
 ```
 
+---
+
 ## 6. Knowledge asset
 
 A **knowledge asset** is any piece of knowledge needed to perform or judge work.
@@ -146,6 +159,8 @@ knowledge_asset:
   version: "1.0"
 ```
 
+---
+
 ## 7. Tool
 
 A **tool** is a system, API, file, database, device, or service used to perform work.
@@ -163,6 +178,8 @@ tool:
     - no_status_change_without_human_approval
 ```
 
+---
+
 ## 8. Artifact
 
 An **artifact** is an output, input, evidence item, or record.
@@ -177,6 +194,8 @@ Examples:
 - review record
 - release note
 - audit log
+- approval record
+- risk review
 
 ```yaml
 artifact:
@@ -189,7 +208,68 @@ artifact:
     - acceptance_criteria
 ```
 
-## 9. Gate
+---
+
+## 9. Governance profile
+
+A **governance profile** is a versioned model of policies, risks, controls, evidence requirements, approval rules, and runtime constraints.
+
+It defines how work should be controlled for a project, domain pack, lifecycle, phase, task, or adapter.
+
+A governance profile may reference internal policy, quality standards, security requirements, risk frameworks, or regulation-related obligations.
+
+```yaml
+governance_profile:
+  id: software-delivery-basic-governance
+  version: "0.1.0"
+  owner_role: governance-owner
+  required_controls:
+    - human-review-for-release
+    - trace-tool-actions
+    - preserve-review-evidence
+```
+
+RALF principle:
+
+> Governance should be explicit, versioned, and connected to lifecycle, role, artifact, gate, and context.
+
+---
+
+## 10. Policy
+
+A **policy** is a rule, constraint, or requirement that affects how work is performed.
+
+```yaml
+policy:
+  id: no-release-without-approval
+  enforcement_level: blocking
+  owner_role: release-manager
+  applies_to:
+    - release
+```
+
+---
+
+## 11. Control
+
+A **control** is a concrete governance requirement.
+
+Controls map policies and risks to lifecycle phases, roles, artifacts, gates, or runtime actions.
+
+```yaml
+control:
+  id: release-human-review
+  applies_to:
+    lifecycle_phase: release
+  required_gate: release-approval
+  required_evidence:
+    - review-record
+    - approval-record
+```
+
+---
+
+## 12. Gate
 
 A **gate** is a control point.
 
@@ -212,7 +292,9 @@ gate:
     - release_notes_created
 ```
 
-## 10. Trace
+---
+
+## 13. Trace
 
 A **trace** records what happened.
 
@@ -220,6 +302,8 @@ A trace should connect:
 
 - task
 - actor or agent
+- role
+- governance profile
 - input artifacts
 - output artifacts
 - tool calls
@@ -230,7 +314,9 @@ A trace should connect:
 
 Traceability is required for trust, audit, debugging, learning, and improvement.
 
-## 11. Context packet
+---
+
+## 14. Context packet
 
 A **context packet** is a bounded bundle of task-specific information.
 
@@ -243,6 +329,7 @@ A context packet should answer:
 - Which role is acting?
 - What is the authority boundary?
 - What knowledge is needed?
+- What governance profile applies?
 - What tools are allowed?
 - What output is expected?
 - What gate or review is required?
@@ -254,6 +341,12 @@ context_packet:
   task: draft-release-notes
   lifecycle_phase: release
   role: developer
+  governance:
+    profile: software-delivery-basic-governance
+    risk_level: medium
+    required_controls:
+      - trace-output-artifact
+      - human-review-before-publication
   allowed_tools:
     - issue-tracker.read
     - git.read
@@ -261,6 +354,8 @@ context_packet:
     - release-notes
   requires_human_approval: true
 ```
+
+---
 
 ## Concept relationship
 
@@ -275,6 +370,9 @@ classDiagram
     class KnowledgeAsset
     class Tool
     class Artifact
+    class GovernanceProfile
+    class Policy
+    class Control
     class Gate
     class Trace
     class ContextPacket
@@ -286,9 +384,15 @@ classDiagram
     DomainPack --> KnowledgeAsset
     DomainPack --> Tool
     DomainPack --> Artifact
+    DomainPack --> GovernanceProfile
     DomainPack --> Gate
+    GovernanceProfile --> Policy
+    GovernanceProfile --> Control
+    Control --> Gate
+    Control --> Artifact
     Lifecycle --> Artifact
     Lifecycle --> Gate
+    Lifecycle --> GovernanceProfile
     Role --> Skill
     Agent --> Role
     ContextPacket --> Lifecycle
@@ -297,7 +401,9 @@ classDiagram
     ContextPacket --> KnowledgeAsset
     ContextPacket --> Tool
     ContextPacket --> Artifact
+    ContextPacket --> GovernanceProfile
     Trace --> ContextPacket
     Trace --> Artifact
     Trace --> Gate
+    Trace --> GovernanceProfile
 ```

@@ -4,13 +4,13 @@
 
 ### Structure your organization before you automate it.
 
-**RALF** is an open framework for modeling organizational lifecycles, roles, knowledge, workflows, artifacts, governance gates, and AI-ready task context.
+**RALF** is an open, early-stage framework for modeling organizational lifecycles, roles, knowledge, workflows, artifacts, governance controls, and AI-ready task context.
 
-It helps teams turn real-world domain expertise into structured operating models that humans, software systems, and AI agents can safely work with.
+It helps teams turn real-world domain expertise into structured operating models that humans, software systems, and AI agents can work with more safely.
 
-[![Status](https://img.shields.io/badge/status-early%20draft-blue)](#project-status)
+[![Status](https://img.shields.io/badge/status-early%20research%20and%20design-blue)](#project-status)
 [![Type](https://img.shields.io/badge/type-open%20framework-111827)](#what-is-ralf)
-[![Focus](https://img.shields.io/badge/focus-AI--ready%20organizations-7c3aed)](#why-ralf)
+[![Focus](https://img.shields.io/badge/focus-governed%20AI--ready%20workflows-7c3aed)](#why-ralf)
 [![License](https://img.shields.io/badge/license-TBD-lightgrey)](#license)
 
 </div>
@@ -28,17 +28,37 @@ A RALF model connects:
 - **Lifecycles** — the phases of work from start to finish.
 - **Domains** — the business, technical, operational, or scientific areas involved.
 - **Roles** — who is responsible, accountable, consulted, or informed.
-- **Agents** — human or AI executors operating within bounded responsibilities.
+- **Agents** — human, software, or AI executors operating within bounded responsibilities.
 - **Skills** — reusable procedures for performing tasks.
 - **Knowledge** — policies, standards, domain facts, examples, and lessons learned.
 - **Tools** — systems, APIs, data sources, and integrations.
 - **Artifacts** — evidence, documents, outputs, records, and decisions.
 - **Gates** — approvals, validations, controls, and quality checks.
+- **Governance profiles** — policies, risks, controls, approval rules, and evidence requirements.
 - **Traces** — audit history of what happened, why, and by whom.
 
 The goal is simple:
 
 > Make organizational knowledge structured enough to be reused, governed, automated, and safely supported by AI.
+
+---
+
+## Research and validation status
+
+RALF is currently a **proposed framework** in early research, specification, and product-design stages.
+
+The framework is being developed through:
+
+- a conceptual research paper
+- an open specification
+- machine-readable schemas
+- example domain packs
+- validation tooling
+- the planned **RALF Studio** visual modeling environment
+
+RALF does **not** claim automatic regulatory compliance. Instead, it provides structures for representing governance controls, roles, approvals, risks, evidence, and runtime constraints.
+
+The next major validation step is to use **RALF Studio** to test whether domain experts and technical teams can model real workflows using RALF concepts.
 
 ---
 
@@ -55,7 +75,7 @@ Unclear lifecycle → unclear ownership → weak context → unreliable automati
 RALF starts from the opposite direction:
 
 ```text
-Lifecycle → roles → knowledge → artifacts → gates → context packets → safe execution
+Lifecycle → roles → knowledge → artifacts → governance → gates → context packets → safe execution
 ```
 
 RALF helps organizations answer questions like:
@@ -64,6 +84,7 @@ RALF helps organizations answer questions like:
 - Which roles are responsible for each phase?
 - What knowledge and standards should guide the work?
 - What artifacts must be produced or reviewed?
+- Which policies and risks apply?
 - Which tasks can be assisted by AI?
 - Which decisions must remain under human control?
 - What evidence do we need for trust, audit, and improvement?
@@ -76,13 +97,14 @@ RALF is not intended to replace existing systems or standards.
 
 It is not:
 
-- a replacement for BPMN, DMN, RACI, ISO standards, or governance frameworks
+- a replacement for BPMN, DMN, RACI, ISO standards, NIST frameworks, or governance frameworks
 - a replacement for agent runtimes or orchestration tools
 - a replacement for ERP, MES, PLM, CMMS, CRM, Git, ticketing, or documentation systems
 - a generic prompt library
 - a chatbot-first automation product
+- a legal compliance automation system
 
-RALF is a **binding layer** that helps organizations compose existing standards, systems, roles, workflows, and AI capabilities into a coherent operating model.
+RALF is a **binding layer** that helps organizations compose existing standards, systems, roles, workflows, governance controls, and AI capabilities into a coherent operating model.
 
 ---
 
@@ -94,10 +116,32 @@ Skills define **how work is performed**.
 Knowledge defines **what must be known**.  
 Tools enable **action**.  
 Artifacts preserve **evidence**.  
-Gates enforce **control**.  
+Governance defines **rules, risks, and controls**.  
+Gates enforce **review and approval**.  
 Traces prove **what happened**.
 
 RALF binds these pieces into reusable **domain packs** and executable **context packets**.
+
+---
+
+## Dynamic governance layer
+
+RALF treats governance as a dynamic layer, not as a static checklist.
+
+A RALF governance profile may describe:
+
+- applicable policies, standards, or regulatory references
+- risk classifications
+- required controls
+- approval rules
+- evidence requirements
+- prohibited or restricted actions
+- runtime enforcement expectations
+- audit and provenance requirements
+
+This allows governance to be attached to lifecycle phases, roles, artifacts, tools, context packets, and agent actions.
+
+RALF can help structure governance for AI risk management, internal policy, security review, quality management, and regulation-related readiness. However, RALF itself does not make a system legally compliant. Compliance depends on correct implementation, organizational process, legal interpretation, human review, and evidence quality.
 
 ---
 
@@ -117,6 +161,11 @@ flowchart TD
     Packs --> Artifacts[Artifacts & Evidence]
     Packs --> Gates[Approval & Quality Gates]
 
+    Governance --> Policies[Policies & Controls]
+    Governance --> Risks[Risk Classification]
+    Governance --> Evidence[Evidence Requirements]
+    Governance --> Approvals[Approval Rules]
+
     Lifecycle --> Compiler[Context Packet Compiler]
     Roles --> Compiler
     Skills --> Compiler
@@ -124,7 +173,10 @@ flowchart TD
     Tools --> Compiler
     Artifacts --> Compiler
     Gates --> Compiler
-    Governance --> Compiler
+    Policies --> Compiler
+    Risks --> Compiler
+    Evidence --> Compiler
+    Approvals --> Compiler
 
     Compiler --> Runtime[Runtime Adapter]
     Runtime --> Human[Human Work]
@@ -150,7 +202,8 @@ flowchart TD
 │   ├── architecture.md
 │   ├── domain-packs.md
 │   ├── context-packets.md
-│   └── governance.md
+│   ├── governance.md
+│   └── studio-validation.md
 └── examples/
     └── software-development-basic/
         └── ralf-project.yaml
@@ -163,11 +216,30 @@ flowchart TD
 Start here:
 
 - [Foundations](docs/foundations.md) — the standards and references RALF builds on.
-- [Core concepts](docs/core-concepts.md) — lifecycle, role, domain, skill, artifact, gate, trace, and context packet.
+- [Core concepts](docs/core-concepts.md) — lifecycle, role, domain, skill, artifact, governance profile, gate, trace, and context packet.
 - [Architecture](docs/architecture.md) — the high-level system structure.
 - [Domain packs](docs/domain-packs.md) — reusable models for specific fields or organizations.
 - [Context packets](docs/context-packets.md) — how task-specific context is packaged for safe execution.
-- [Governance](docs/governance.md) — human control, risk, gates, and evidence.
+- [Governance](docs/governance.md) — dynamic governance, human control, risk, gates, evidence, and runtime constraints.
+- [Studio validation](docs/studio-validation.md) — how RALF Studio will be used to validate the framework.
+
+---
+
+## RALF Studio
+
+**RALF Studio** is the planned visual modeling environment for validating and applying the framework.
+
+The goal of Studio is to help users model:
+
+- organizational lifecycles
+- roles and responsibilities
+- artifacts and evidence
+- governance controls
+- approval gates
+- domain knowledge
+- context packets for AI-assisted work
+
+Studio is also intended to validate the framework itself by testing whether real users can apply RALF to practical workflows before broad claims are made about maturity or adoption.
 
 ---
 
@@ -178,7 +250,7 @@ ralf_version: "0.1"
 project:
   id: software-development-basic
   name: Software Development Basic
-  purpose: Model a simple software delivery lifecycle with roles, artifacts, gates, and AI-ready context.
+  purpose: Model a simple software delivery lifecycle with roles, artifacts, gates, governance, and AI-ready context.
 
 lifecycle:
   id: software-delivery
@@ -213,6 +285,13 @@ roles:
   - id: reviewer
     responsibilities: [review quality, approve release]
 
+governance:
+  profile: software-delivery-basic-governance
+  required_controls:
+    - design-review
+    - evidence-record
+    - human-approval-for-release
+
 gates:
   - id: design-approval
     phase: design
@@ -221,6 +300,7 @@ gates:
       - problem is clearly stated
       - success criteria are defined
       - risks are documented
+      - governance controls are identified
 ```
 
 See the full example in [`examples/software-development-basic/ralf-project.yaml`](examples/software-development-basic/ralf-project.yaml).
@@ -235,8 +315,11 @@ Current focus:
 
 - defining the core meta-model
 - documenting the framework foundations
+- updating the governance model
 - creating the first examples
 - designing schema structure
+- preparing CLI-based validation
+- designing RALF Studio as a framework validation environment
 - separating framework concepts from product implementation
 
 Not stable yet:
@@ -246,6 +329,16 @@ Not stable yet:
 - domain pack format
 - context packet format
 - governance profile format
+- Studio UX and validation method
+- runtime enforcement model
+
+Not claimed yet:
+
+- production maturity
+- broad industry adoption
+- automatic legal or regulatory compliance
+- complete runtime enforcement
+- validated results across domains
 
 ---
 
@@ -254,6 +347,17 @@ Not stable yet:
 RALF should reuse existing standards where possible and only define new concepts where the binding layer requires them.
 
 Before proposing a new concept, check whether an existing standard, framework, protocol, or well-known pattern already solves the problem.
+
+Good contribution areas include:
+
+- lifecycle examples
+- domain pack ideas
+- schema feedback
+- terminology improvements
+- governance patterns
+- adapter ideas
+- documentation improvements
+- real-world validation cases
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
 
